@@ -25,6 +25,16 @@
  * 
  */
 
+ /*
+  * July 29, 2023 Minor changes to output sent to mastodon, added the @ sign for beats time
+  * and added 0x to hex time.
+  * Also added a esp.reboot on a couple of fail conditions.
+  * 
+  */ 
+
+//Version 1.0.1 July 29, 2023  
+
+
 #include <lyuba.h> //https://github.com/ringtailsoftware/lyuba 
 //enable or format your device to use SPIFFS
 
@@ -55,13 +65,14 @@ String months[] = {"January", "February", "March", "April", "May", "June", "July
 String days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
 
-void printLocalTime()
-{
+void printLocalTime() {
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
     Serial.println("Failed to obtain time");
+    ESP.restart();
     return;
   }
+  
   Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
   char buff[100];
   message = String(days[timeinfo.tm_wday]) + ", " + String(months[timeinfo.tm_mon]) + " " + String(timeinfo.tm_mday) + " " + String(timeinfo.tm_year + 1900) + " "; 
@@ -72,7 +83,7 @@ void printLocalTime()
   
   beats = ((timeinfo.tm_sec+1) + ((timeinfo.tm_min+1) * 60) + ((timeinfo.tm_hour+1) * 3600)) / 86.4;
   Serial.print("@"); Serial.print(beats); Serial.println(" .beats");
-  message = message + String(beats) + " .beats \n";
+  message = message +"@" + String(beats) + " .beats \n";
 
   //New Earth Time
   net_second = ((timeinfo.tm_min % 4) * 60 /4) + abs(timeinfo.tm_sec/4); 
@@ -128,7 +139,7 @@ void printLocalTime()
   int hex_hour = timeinfo.tm_hour;
   Serial.print("#"); Serial.printf("%02X",hex_hour); Serial.printf("%02X",hex_minute); Serial.printf("%02X\n",hex_second);
   sprintf(buff, "%02X%02X%02X",hex_hour,hex_minute,hex_second); String tempMsg2(buff);
-  message = message + "Hex Time: " + tempMsg2 + "\n";
+  message = message + "Hex Time: 0x" + tempMsg2 + "\n";
 
 message = message + "\nUseless Clock Two By LeRoy Miller, KD8BXP\n";
 
@@ -141,6 +152,7 @@ lyuba_loop(lyuba);
         }
    
 message = "";
+  }
 }
 
 

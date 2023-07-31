@@ -18,22 +18,22 @@ And of course the ESP32 board core installed.
 
 UTC (Not useless or obscure)  
 New Earth Time (N.E.T.):  
- * http://www.csgnetwork.com/csgnetstdtime.html
- * http://newearthtime.net/
+ * http://www.csgnetwork.com/csgnetstdtime.html  
+ * http://newearthtime.net/  
  * https://en.wikipedia.org/wiki/New_Earth_Time
 A couple of different variations of Decimal Time (which one is right? I don't know):  
- * https://en.wikipedia.org/wiki/Decimal_time
- * https://www.timecalculator.net/time-to-decimal
+ * https://en.wikipedia.org/wiki/Decimal_time  
+ * https://www.timecalculator.net/time-to-decimal  
 Doctor Who Dalek Rel Clock:  
 French Fraction of day time (French Decimal Time):  
- * https://hackaday.com/2016/12/14/set-your-clocks-to-decimal-time/
+ * https://hackaday.com/2016/12/14/set-your-clocks-to-decimal-time/  
 Star Trek Style Stardate: (As there is some confusion about what and how a Stardate is calculated, this is one of the simplier varations)  
 Hexadecimal Clock/Time:  
- * https://minkukel.com/en/clocks/hexadecimal-clock/
-Swatch Internet Time IE: beats :
- * https://en.wikipedia.org/wiki/Swatch_Internet_Time
- * https://www.timeanddate.com/time/internettime.html
- * https://www.swatch.com/en_us/internet-time/
+ * https://minkukel.com/en/clocks/hexadecimal-clock/  
+Swatch Internet Time IE: beats :  
+ * https://en.wikipedia.org/wiki/Swatch_Internet_Time  
+ * https://www.timeanddate.com/time/internettime.html  
+ * https://www.swatch.com/en_us/internet-time/  
  * Internet Time invited by the Swatch Watch company in 1999 at the start of the age of the internet  
 
 
@@ -41,7 +41,7 @@ Others may be added later (or not).
 To the best of my ability these have been varified from "official" sources (where avaiable) as being the "correct" time.  
 The usefullness of them is questionable at best.  
 
-Have fun!.  
+Have fun!  
 
 ## Why is it called UselessClock2 (or Yet Another Useless Clock)
 
@@ -52,6 +52,14 @@ Made by: @PetraOleum@cloudisland.nz
 And his source can be found here: https://github.com/PetraOleum/Useless-Clock  
 And you can see from the code, our useless clocks are quite a bit different.  
 
+## Versions
+
+1.0.0  - July 2023 - Init release  
+1.0.1  - July 29, 2023 - Minor changes to output sent to Mastodon, added @ sign for .beats and 0x for hex time.  
+
+## Known Issues
+
+@PetraOleum@cloudisland.nz pointed out that .beats time goes over 1000 beats, between 2300 and 0000 UTC.  
 
 ## Contributing
 
@@ -77,7 +85,7 @@ https://kd8bxp.blogspot.com/
 
 ## Credits
 
-Copyright (c) 2023 LeRoy Miller
+Copyright (c) 2023 LeRoy Miller  
 
 ## License
 
