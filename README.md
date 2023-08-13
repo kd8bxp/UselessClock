@@ -56,10 +56,11 @@ And you can see from the code, our useless clocks are quite a bit different.
 
 1.0.0  - July 2023 - Init release  
 1.0.1  - July 29, 2023 - Minor changes to output sent to Mastodon, added @ sign for .beats and 0x for hex time.  
+1.0.2  - Aug 12, 2023 - Fixed errors in .beats time, added unix time (epoch time) and moved the credentials to separated file.  
 
 ## Known Issues
 
-@PetraOleum@cloudisland.nz pointed out that .beats time goes over 1000 beats, between 2300 and 0000 UTC.  
+~~ @PetraOleum@cloudisland.nz pointed out that .beats time goes over 1000 beats, between 2300 and 0000 UTC. ~~ Fixed Aug 12, 2023  
 
 ## Contributing
 

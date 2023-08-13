@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include "time.h"
+#include "creds.h"
 
 /*
  Project started many years ago (late 2019 maybe), and finally figured out how to finished it. By LeRoy F. Miller, KD8BXP (C) 2023
@@ -33,23 +34,14 @@
   */ 
 
 //Version 1.0.1 July 29, 2023  
-
+//Version 1.0.2 Aug 12, 2023 Fixed errors in .beats time, added unix time, and moved credentials to own tab
 
 #include <lyuba.h> //https://github.com/ringtailsoftware/lyuba 
 //enable or format your device to use SPIFFS
 
-#define MASTODON_USERNAME ""
-#define MASTODON_PASSWORD ""
-#define MASTODON_HOST "botsin.space"
 
-//put "Bearer " and before your token, otherwise this isn't going to work
-static const char *authToken =  NULL;
 static bool haveTooted = false;
 static lyuba_t *lyuba = NULL;
-
-
-const char* ssid       = "YOURWIFISSID";
-const char* password   = "WIFIPASSWORD";
 
 const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = 0; //UTC for Internet Time
@@ -66,12 +58,14 @@ String days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday
 
 
 void printLocalTime() {
+  time_t now;
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
     Serial.println("Failed to obtain time");
     ESP.restart();
     return;
   }
+  time(&now);
   
   Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
   char buff[100];
@@ -80,8 +74,14 @@ void printLocalTime() {
     if (timeinfo.tm_min < 10) {message = message + "0" + String(timeinfo.tm_min) + ":"; } else {message = message + String(timeinfo.tm_min) + ":";}
     if (timeinfo.tm_sec < 10) {message = message + "0" + String(timeinfo.tm_sec); } else {message = message + String(timeinfo.tm_sec); }
     message = message + " UTC\n";
-  
-  beats = ((timeinfo.tm_sec+1) + ((timeinfo.tm_min+1) * 60) + ((timeinfo.tm_hour+1) * 3600)) / 86.4;
+
+ Serial.print("Unix Time: ");Serial.println(now);
+ message = message + "Unix Time: " + String(now) + "\n";
+
+  int tempBeatHour = timeinfo.tm_hour + 1;
+  if (tempBeatHour == 24) {tempBeatHour = 0;}
+  //beats = ((timeinfo.tm_sec) + ((timeinfo.tm_min) * 60) + ((timeinfo.tm_hour+1) * 3600)) / 86.4;
+  beats = ((timeinfo.tm_sec) + ((timeinfo.tm_min) * 60) + ((tempBeatHour) * 3600)) / 86.4;
   Serial.print("@"); Serial.print(beats); Serial.println(" .beats");
   message = message +"@" + String(beats) + " .beats \n";
 
@@ -228,6 +228,7 @@ void setup()
 lyuba = lyuba_init(MASTODON_HOST, MASTODON_USERNAME, MASTODON_PASSWORD);
     if (lyuba == NULL) {
         Serial.printf("lyuba_init failed!");
+        ESP.restart();
         while(1) {
             delay(1000);
         }
@@ -240,6 +241,9 @@ lyuba = lyuba_init(MASTODON_HOST, MASTODON_USERNAME, MASTODON_PASSWORD);
         lyuba_authenticate(lyuba, authCb);
     }
     
+  //disconnect WiFi as it's no longer needed
+  //WiFi.disconnect(true);
+  //WiFi.mode(WIFI_OFF);
 }
 
 static void tootCb(bool ok) {
@@ -253,14 +257,14 @@ static void tootCb(bool ok) {
 
 void loop()
 {
-  
+  //lyuba_loop(lyuba);
   printLocalTime();
   //delay(30 * 60 * 1000);
   esp_sleep_enable_timer_wakeup(30 * 60 * 1000000); 
   delay(30 * 1000);
   esp_deep_sleep_start();
   ESP.restart();
-  
+  //while(1); //delay(1000);
 }
 
 /*
